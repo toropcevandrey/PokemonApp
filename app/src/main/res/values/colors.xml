@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main">#FF9212</color>
+    <color name="secondary">#FFDB65</color>
+    <color name="black">#333333</color>
+    <color name="gray_dark">#666666</color>
+    <color name="gray">#B3B3B3</color>
+    <color name="gray_light">#F1F1F1</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="search">#FFC54C</color>
+    <color name="default_search">#FFEBC1</color>
+</resources>

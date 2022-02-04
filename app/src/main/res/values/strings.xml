@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PokemonApp</string>
+    <string name="feed">Feed</string>
+    <string name="favorite">Favorite</string>
+    <string name="Rarity">Rarity</string>
+    <string name="Type">Type</string>
+    <string name="Subtype">Subtype</string>
+    <string name="Health">Health</string>
+</resources>

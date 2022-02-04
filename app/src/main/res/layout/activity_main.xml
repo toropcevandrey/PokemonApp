@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemePokemonApp">
+
+    <androidx.appcompat.widget.Toolbar
+        android:background="@color/secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/fl_root_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white"
+        tools:context=".features.main.MainActivity" />
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_weight="0"
+        android:background="@color/white"
+        android:elevation="16dp"
+        app:itemBackground="@drawable/menu_background_color"
+        app:itemIconTint="@color/bottom_navigation_item_background_colors"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/menu_bottom_navigation" />
+
+</LinearLayout>
