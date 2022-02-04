@@ -23,7 +23,6 @@ class FeedInteractor @Inject constructor(private val feedRepository: FeedReposit
                 )
             )
         }
-
         return list
     }
 
@@ -38,7 +37,6 @@ class FeedInteractor @Inject constructor(private val feedRepository: FeedReposit
         favoriteData.forEach { element ->
             list.add(FavoriteModel(element.id, element.name, element.image))
         }
-
         return list
     }
 

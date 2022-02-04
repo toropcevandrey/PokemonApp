@@ -15,7 +15,7 @@ class DetailsViewModel @Inject constructor(
     private val detailsInteractor: DetailsInteractor
 ) : ViewModel() {
 
-    val detailsLiveData: MutableLiveData<DetailsViewData> = MutableLiveData()
+    val detailsLiveData: MutableLiveData<DetailsState> = MutableLiveData(DetailsState.Loading)
     private var favoriteList: MutableList<FavoriteModel> = mutableListOf()
     private lateinit var detailsModel: DetailsModel
 
@@ -24,13 +24,20 @@ class DetailsViewModel @Inject constructor(
             try {
                 detailsModel = detailsInteractor.getDetailsInfoFromApi(id)
                 favoriteList.addAll(detailsInteractor.getFavoriteModelCards())
-                detailsLiveData.postValue(generateDetailsViewData(favoriteList, detailsModel))
+                detailsLiveData.postValue(DetailsState.Loading)
+                detailsLiveData.postValue(
+                    DetailsState.Success(
+                        generateDetailsViewData(
+                            favoriteList,
+                            detailsModel
+                        )
+                    )
+                )
             } catch (e: Exception) {
-
+                detailsLiveData.postValue(DetailsState.Error)
             }
         }
     }
-
 
     private fun generateDetailsViewData(
         favoriteList: List<FavoriteModel>,
@@ -53,28 +60,34 @@ class DetailsViewModel @Inject constructor(
 
     fun onFavorite(id: String) {
         viewModelScope.launch {
-            val isFavorite: Boolean
-            val favoriteItem = favoriteList.find { element ->
-                id == element.id
+            try {
+                val isFavorite: Boolean
+                val favoriteItem = favoriteList.find { element ->
+                    id == element.id
+                }
+                if (favoriteItem == null) {
+                    addToFavorite()
+                    isFavorite = true
+                } else {
+                    removeFromFavorite(id)
+                    isFavorite = false
+                }
+                detailsLiveData.value = DetailsState.Success(
+                    DetailsViewData(
+                        name = detailsModel.name,
+                        image = detailsModel.image,
+                        type = detailsModel.type,
+                        subtype = detailsModel.subtype,
+                        health = detailsModel.health,
+                        rarity = detailsModel.rarity,
+                        attack1 = detailsModel.attack1,
+                        attack2 = detailsModel.attack2,
+                        favorite = isFavorite
+                    )
+                )
+            } catch (e: Exception) {
+                detailsLiveData.value = DetailsState.Error
             }
-            if (favoriteItem == null) {
-                addToFavorite()
-                isFavorite = true
-            } else {
-                removeFromFavorite(id)
-                isFavorite = false
-            }
-            detailsLiveData.value = DetailsViewData(
-                name = detailsModel.name,
-                image = detailsModel.image,
-                type = detailsModel.type,
-                subtype = detailsModel.subtype,
-                health = detailsModel.health,
-                rarity = detailsModel.rarity,
-                attack1 = detailsModel.attack1,
-                attack2 = detailsModel.attack2,
-                favorite = isFavorite
-            )
         }
     }
 

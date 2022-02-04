@@ -15,15 +15,27 @@ class FeedViewModel @Inject constructor(
     private val feedInteractor: FeedInteractor
 ) : ViewModel() {
 
-    val feedLiveData: MutableLiveData<List<FeedViewData>> = MutableLiveData()
+    val feedLiveData: MutableLiveData<FeedState> = MutableLiveData(FeedState.Loading)
     private var feedList: MutableList<FeedModel> = mutableListOf()
     private var favoriteList: MutableList<FavoriteModel> = mutableListOf()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            feedList.addAll(feedInteractor.getFeedModelCards())
-            favoriteList.addAll(feedInteractor.getFavoriteModelCards())
-            feedLiveData.postValue(generateFeedViewData(feedList, favoriteList))
+            try {
+                feedList.addAll(feedInteractor.getFeedModelCards())
+                favoriteList.addAll(feedInteractor.getFavoriteModelCards())
+                feedLiveData.postValue(FeedState.Loading)
+                feedLiveData.postValue(
+                    FeedState.Success(
+                        generateFeedViewData(
+                            feedList,
+                            favoriteList
+                        )
+                    )
+                )
+            } catch (e: Exception) {
+                feedLiveData.postValue(FeedState.Error)
+            }
         }
     }
 
@@ -63,10 +75,15 @@ class FeedViewModel @Inject constructor(
 
     fun updateList() {
         viewModelScope.launch(Dispatchers.IO) {
-            favoriteList.clear()
-            favoriteList.addAll(feedInteractor.getFavoriteModelCards())
-            val list = generateFeedViewData(feedList, favoriteList)
-            feedLiveData.postValue(list)
+            try {
+                favoriteList.clear()
+                feedLiveData.postValue(FeedState.Loading)
+                favoriteList.addAll(feedInteractor.getFavoriteModelCards())
+                val list = generateFeedViewData(feedList, favoriteList)
+                feedLiveData.postValue(FeedState.Success(list))
+            } catch (e: Exception) {
+                feedLiveData.postValue(FeedState.Error)
+            }
         }
     }
 

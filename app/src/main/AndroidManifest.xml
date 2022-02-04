@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ThemePokemonApp">
+        <activity android:name=".features.details.presentation.DetailsActivity"
+            android:exported="false"/>
         <activity
             android:name=".features.main.MainActivity"
             android:exported="true">

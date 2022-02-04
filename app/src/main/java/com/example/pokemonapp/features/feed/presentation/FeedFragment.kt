@@ -1,19 +1,23 @@
 package com.example.pokemonapp.features.feed.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemonapp.App
 import com.example.pokemonapp.R
-import com.example.pokemonapp.features.details.presentation.DetailsFragment
+import com.example.pokemonapp.features.details.presentation.DetailsActivity
+import com.example.pokemonapp.utils.Constants.ID
 import com.example.pokemonapp.utils.Constants.SPAN_COUNT
-import com.example.pokemonapp.utils.attach
-import com.example.pokemonapp.utils.detach
 import javax.inject.Inject
 
 class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
@@ -23,8 +27,9 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     private var viewModel: FeedViewModel? = null
     private lateinit var rvFeed: RecyclerView
     private lateinit var adapterFeed: FeedListAdapter
-    private val bundle: Bundle = Bundle()
-    private val fragment: DetailsFragment = DetailsFragment()
+    private lateinit var tvError: TextView
+    private lateinit var pgLoading: ProgressBar
+    private lateinit var btnRefresh: Button
 
     companion object {
         const val TAG = "FRAGMENT_FEED"
@@ -44,7 +49,7 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     }
 
     override fun onPokemonClick(id: String) {
-        openDetailsFragment(id)
+        openDetails(id)
     }
 
     override fun onFavoriteClick(id: String) {
@@ -58,6 +63,12 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
 
     private fun initViews(view: View): View {
         rvFeed = view.findViewById(R.id.rv_feed)
+        btnRefresh = view.findViewById(R.id.btn_feed_refresh)
+        btnRefresh.setOnClickListener {
+            viewModel?.updateList()
+        }
+        tvError = view.findViewById(R.id.tv_feed_error)
+        pgLoading = view.findViewById(R.id.pb_feed_loading)
         adapterFeed = FeedListAdapter(this)
         rvFeed.adapter = adapterFeed
         rvFeed.layoutManager = GridLayoutManager(view.context, SPAN_COUNT)
@@ -65,17 +76,25 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     }
 
     private fun setObservers() {
-        viewModel?.feedLiveData?.observe(viewLifecycleOwner) { list ->
-            adapterFeed.submitList(list)
+        viewModel?.feedLiveData?.observe(viewLifecycleOwner) { state ->
+            val isError = state is FeedState.Error
+            val isSuccess = state is FeedState.Success
+            val isLoading = state is FeedState.Loading
+            rvFeed.isVisible = isSuccess
+            btnRefresh.isVisible = isError
+            tvError.isVisible = isError
+            pgLoading.isVisible = isLoading
+
+            if (isSuccess) {
+                adapterFeed.submitList((state as FeedState.Success).feed)
+            }
         }
     }
 
-    private fun openDetailsFragment(id: String) {
-        bundle.putString("id", id)
-        fragment.arguments = bundle
-        parentFragmentManager.detach(R.id.fl_root_container)
-        parentFragmentManager.attach(fragment, DetailsFragment.TAG, R.id.fl_root_container)
-        parentFragmentManager.executePendingTransactions()
+    private fun openDetails(id: String) {
+        val intent = Intent(activity, DetailsActivity::class.java)
+        intent.putExtra(ID, id)
+        startActivity(intent)
     }
 
 }

@@ -12,6 +12,9 @@ import javax.inject.Singleton
 class FeedModule {
     @Provides
     @Singleton
-    fun provideFeedRepository(apiService: ApiService, favoriteDataDao: FavoriteDataDao): FeedRepository =
+    fun provideFeedRepository(
+        apiService: ApiService,
+        favoriteDataDao: FavoriteDataDao
+    ): FeedRepository =
         FeedRepositoryImpl(apiService, favoriteDataDao)
 }

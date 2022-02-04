@@ -15,18 +15,15 @@ object RetrofitBuilder {
         }
     }
 
-
-
-
     private val okHttpClient: OkHttpClient by lazy {
         val clientBuilder = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor { chain ->
-            val original = chain.request()
-            val requestBuilder = original.newBuilder()
-            val request = requestBuilder.build()
-            chain.proceed(request)
-        }
+                val original = chain.request()
+                val requestBuilder = original.newBuilder()
+                val request = requestBuilder.build()
+                chain.proceed(request)
+            }
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
         clientBuilder.addInterceptor(loggingInterceptor)

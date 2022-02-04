@@ -1,7 +1,6 @@
 package com.example.pokemonapp.features.details.domain
 
 import com.example.pokemonapp.api.model.details_model.DetailsApiResponse
-import com.example.pokemonapp.features.details.data.DetailsRepositoryImpl
 import com.example.pokemonapp.features.favorite.data.FavoriteData
 import com.example.pokemonapp.features.favorite.domain.FavoriteModel
 import javax.inject.Inject
@@ -46,7 +45,7 @@ class DetailsInteractor @Inject constructor(private val detailsRepository: Detai
         detailsRepository.addToFavorite(favoriteData)
     }
 
-    suspend fun removeFromFavorite(id: String){
+    suspend fun removeFromFavorite(id: String) {
         detailsRepository.removeFromFavorite(id)
     }
 }

@@ -18,7 +18,7 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FeedViewModel::class)
     @Singleton
-    abstract fun bindFeedViewModel(feedViewModel: FeedViewModel):ViewModel
+    abstract fun bindFeedViewModel(feedViewModel: FeedViewModel): ViewModel
 
     @Binds
     @IntoMap

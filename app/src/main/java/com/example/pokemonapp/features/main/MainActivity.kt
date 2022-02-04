@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
     private fun configureBottomNavigation() {
         val bottomNavigationView =
             findViewById<View>(R.id.bottom_navigation) as BottomNavigationView

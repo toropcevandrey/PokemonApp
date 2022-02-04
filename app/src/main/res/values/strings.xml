@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">PokemonApp</string>
-    <string name="feed">Feed</string>
-    <string name="favorite">Favorite</string>
-    <string name="Rarity">Rarity</string>
-    <string name="Type">Type</string>
-    <string name="Subtype">Subtype</string>
-    <string name="Health">Health</string>
+    <string name="feed">Лента</string>
+    <string name="favorite">Избранные</string>
+    <string name="rarity">Ценность</string>
+    <string name="type">Тип</string>
+    <string name="subtype">Подтип</string>
+    <string name="health">Здоровье</string>
+    <string name="error">Ошибка связи</string>
+    <string name="refresh">Повторить</string>
 </resources>

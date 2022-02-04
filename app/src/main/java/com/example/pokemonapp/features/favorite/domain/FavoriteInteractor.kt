@@ -8,7 +8,6 @@ class FavoriteInteractor @Inject constructor(private val favoriteRepository: Fav
     suspend fun getFavoriteModelCards(): List<FavoriteModel> {
         val favoriteData: List<FavoriteData> = favoriteRepository.getFavoriteCards()
         return generateFavoriteModelList(favoriteData)
-
     }
 
     private fun generateFavoriteModelList(favoriteData: List<FavoriteData>): List<FavoriteModel> {
@@ -19,7 +18,7 @@ class FavoriteInteractor @Inject constructor(private val favoriteRepository: Fav
         return list
     }
 
-    suspend fun removeFromFavorite(id: String){
+    suspend fun removeFromFavorite(id: String) {
         favoriteRepository.removeFromFavorite(id)
     }
 }

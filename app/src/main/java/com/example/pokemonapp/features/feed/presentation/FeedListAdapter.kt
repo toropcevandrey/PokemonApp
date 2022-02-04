@@ -2,7 +2,6 @@ package com.example.pokemonapp.features.feed.presentation
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.pokemonapp.features.feed.domain.FeedModel
 
 class FeedListAdapter(private val onClickListener: OnPokemonClickListener) :
     ListAdapter<FeedViewData, FeedViewHolder>(FeedComparator()) {
