@@ -41,6 +41,11 @@ class FavoriteFragment : Fragment(), FavoriteListAdapter.OnPokemonClickListener 
         return view
     }
 
+    override fun onResume() {
+        viewModel?.updateList()
+        super.onResume()
+    }
+
     override fun onPokemonClick(id: String) {
         openDetails(id)
     }

@@ -16,18 +16,18 @@ import javax.inject.Singleton
 abstract class ViewModelModule {
     @Binds
     @IntoMap
-    @ViewModelKey(FeedViewModel::class)
     @Singleton
+    @ViewModelKey(FeedViewModel::class)
     abstract fun bindFeedViewModel(feedViewModel: FeedViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(DetailsViewModel::class)
-    @Singleton
     abstract fun bindDetailsViewModel(detailsViewModel: DetailsViewModel): ViewModel
 
     @Binds
     @IntoMap
+    @Singleton
     @ViewModelKey(FavoriteViewModel::class)
     abstract fun bindFavoriteViewModel(favoriteViewModel: FavoriteViewModel): ViewModel
 

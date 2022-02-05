@@ -8,15 +8,14 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("cards")
+    @GET("cards/?$TOKEN")
     suspend fun getCards(
-        @Query("pageSize") pageSize: Int = 10,
-        @Query("X-Api-Key") token: String = TOKEN
+        @Query("page")page: Int,
+        @Query("pageSize")pageSize: Int = 10
     ): FeedApiResponse
 
-    @GET("cards/{id}")
+    @GET("cards/{id}?$TOKEN")
     suspend fun getDetails(
-        @Path("id") id: String,
-        @Query("X-Api-Key") token: String = TOKEN
+        @Path("id") id: String
     ): DetailsApiResponse
 }

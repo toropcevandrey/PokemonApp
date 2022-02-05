@@ -2,10 +2,13 @@
     <string name="app_name">PokemonApp</string>
     <string name="feed">Лента</string>
     <string name="favorite">Избранные</string>
-    <string name="rarity">Ценность</string>
-    <string name="type">Тип</string>
-    <string name="subtype">Подтип</string>
-    <string name="health">Здоровье</string>
+    <string name="rarity">Ценность:</string>
+    <string name="type">Тип:</string>
+    <string name="subtype">Подтип:</string>
+    <string name="health">Здоровье:</string>
+    <string name="attack1">Атака №1:</string>
+    <string name="attack2">Атака №2:</string>
     <string name="error">Ошибка связи</string>
     <string name="refresh">Повторить</string>
+    <string name="search">Search…</string>
 </resources>

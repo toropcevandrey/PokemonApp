@@ -12,8 +12,8 @@ class FeedRepositoryImpl @Inject constructor(
     private val favoriteDataDao: FavoriteDataDao
 ) : FeedRepository {
 
-    override suspend fun getFeedApiResponse(): FeedApiResponse {
-        return apiService.getCards()
+    override suspend fun getFeedApiResponse(page: Int): FeedApiResponse {
+        return apiService.getCards(page)
     }
 
     override suspend fun getFavoriteCards(): List<FavoriteData> {

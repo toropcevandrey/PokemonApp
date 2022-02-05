@@ -18,11 +18,12 @@ class FeedViewModel @Inject constructor(
     val feedLiveData: MutableLiveData<FeedState> = MutableLiveData(FeedState.Loading)
     private var feedList: MutableList<FeedModel> = mutableListOf()
     private var favoriteList: MutableList<FavoriteModel> = mutableListOf()
+    private var page: Int = 1
 
-    init {
+    fun init() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                feedList.addAll(feedInteractor.getFeedModelCards())
+                feedList.addAll(feedInteractor.getFeedModelCards(page))
                 favoriteList.addAll(feedInteractor.getFavoriteModelCards())
                 feedLiveData.postValue(FeedState.Loading)
                 feedLiveData.postValue(
@@ -102,5 +103,24 @@ class FeedViewModel @Inject constructor(
 
     private suspend fun removeFromFavorite(id: String) {
         feedInteractor.removeFromFavorite(id)
+    }
+
+    fun addItemsInRecycler() {
+        page++
+        viewModelScope.launch {
+            try {
+                feedList.addAll(feedInteractor.getFeedModelCards(page))
+                feedLiveData.value = (
+                        FeedState.Success(
+                            generateFeedViewData(
+                                feedList,
+                                favoriteList
+                            )
+                        )
+                        )
+            } catch (e: Exception) {
+                FeedState.Error
+            }
+        }
     }
 }

@@ -30,7 +30,8 @@ class DetailsActivity : AppCompatActivity() {
     private lateinit var tvDetailType: TextView
     private lateinit var tvDetailSubtype: TextView
     private lateinit var tvDetailHealth: TextView
-    private lateinit var tvDetailAttackType: TextView
+    private lateinit var tvDetailAttack1: TextView
+    private lateinit var tvDetailAttack2: TextView
     private lateinit var fab: FloatingActionButton
     private lateinit var tvError: TextView
     private lateinit var btnRefresh: Button
@@ -54,6 +55,8 @@ class DetailsActivity : AppCompatActivity() {
         tvDetailType = findViewById(R.id.tv_detail_type)
         tvDetailSubtype = findViewById(R.id.tv_detail_subtype)
         tvDetailHealth = findViewById(R.id.tv_detail_health)
+        tvDetailAttack1 = findViewById(R.id.tv_detail_attack_1)
+        tvDetailAttack2 = findViewById(R.id.tv_detail_attack_2)
         groupDetails = findViewById(R.id.group_details)
         tvError = findViewById(R.id.tv_detail_error)
         btnRefresh = findViewById(R.id.btn_detail_refresh)
@@ -100,6 +103,8 @@ class DetailsActivity : AppCompatActivity() {
                 tvDetailType.text = state.detail.type
                 tvDetailSubtype.text = state.detail.subtype
                 tvDetailHealth.text = state.detail.health
+                tvDetailAttack1.text = state.detail.attack1
+                tvDetailAttack2.text = state.detail.attack2
                 setIconOnFab(state.detail.favorite)
             }
         })

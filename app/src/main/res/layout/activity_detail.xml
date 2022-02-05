@@ -12,9 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:fontFamily="@font/roboto"
         android:text="@string/error"
         android:textColor="@color/gray_dark"
         android:textSize="25sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/btn_detail_refresh"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -25,8 +27,10 @@
         android:layout_height="wrap_content"
         android:background="@color/gray_light"
         android:elevation="10dp"
+        android:fontFamily="@font/roboto"
         android:text="@string/refresh"
         android:textColor="@color/main"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -36,6 +40,7 @@
         android:id="@+id/pb_detail_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -48,17 +53,24 @@
         app:constraint_referenced_ids="iv_detail_avatar,
         tv_detail_name,
         tv_detail_rarity,
+        tv_detail_rarity_string,
         tv_detail_type,
-        tv_detail_attack_type,
-        tv_detail_name,
+        tv_detail_type_string,
         tv_detail_health,
-        tv_detail_subtype" />
+        tv_detail_health_string,
+        tv_detail_subtype,
+        tv_detail_subtype_string,
+        tv_detail_attack_1,
+        tv_detail_attack_1_string,
+        tv_detail_attack_2,
+        tv_detail_attack_2_string" />
 
     <ImageView
         android:id="@+id/iv_detail_avatar"
         android:layout_width="250dp"
         android:layout_height="350dp"
         android:layout_marginTop="24dp"
+        android:background="@color/gray_dark"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -68,56 +80,164 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto"
         android:textSize="28sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_detail_avatar"
         tools:text="Pokemon" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/tv_detail_rarity"
+        android:id="@+id/tv_detail_type_string"
+        android:text="@string/type"
+        android:fontFamily="@font/roboto"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_detail_name"
-        tools:text="Promo" />
-
+        />
     <TextView
         android:id="@+id/tv_detail_type"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_type_string"
         android:layout_width="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="16dp"
+        android:textSize="16sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_detail_name"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roboto"
         tools:text="Grass" />
 
+
+    <TextView
+        android:id="@+id/tv_detail_subtype_string"
+        android:text="@string/subtype"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_type"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        android:fontFamily="@font/roboto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/tv_detail_subtype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_detail_rarity"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_subtype_string"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/roboto"
         tools:text="Basic" />
 
+
+    <TextView
+        android:id="@+id/tv_detail_rarity_string"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_name"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        android:text="@string/rarity"
+        android:fontFamily="@font/roboto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tv_detail_rarity"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_rarity_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        tools:text="Promo" />
+
+
+    <TextView
+        android:id="@+id/tv_detail_health_string"
+        android:text="@string/health"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_rarity"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        android:fontFamily="@font/roboto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/tv_detail_health"
         android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_health_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_detail_type"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roboto"
         tools:text="50" />
 
+
     <TextView
-        android:id="@+id/tv_detail_attack_type"
+        android:id="@+id/tv_detail_attack_1_string"
+        android:text="@string/attack1"
+        android:fontFamily="@font/roboto"
+        app:layout_constraintTop_toBottomOf="@id/tv_detail_subtype"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tv_detail_attack_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_attack_1_string"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        tools:text="attack1"/>
+
+
+    <TextView
+        android:id="@+id/tv_detail_attack_2_string"
+        android:text="@string/attack2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_health"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/roboto"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tv_detail_attack_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_attack_2_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        tools:text="attack2"/>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_favorite"

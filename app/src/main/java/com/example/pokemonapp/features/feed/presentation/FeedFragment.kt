@@ -2,6 +2,7 @@ package com.example.pokemonapp.features.feed.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,11 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.pokemonapp.App
 import com.example.pokemonapp.R
 import com.example.pokemonapp.features.details.presentation.DetailsActivity
@@ -30,6 +34,7 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     private lateinit var tvError: TextView
     private lateinit var pgLoading: ProgressBar
     private lateinit var btnRefresh: Button
+    private lateinit var swipeRefresh: SwipeRefreshLayout
 
     companion object {
         const val TAG = "FRAGMENT_FEED"
@@ -45,7 +50,16 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
         initViews(view)
         setupFeedViewModel()
         setObservers()
+        rvAddOnScrollListener()
+        swipeRefresh.setOnRefreshListener {
+            viewModel?.init()
+        }
         return view
+    }
+
+    override fun onResume() {
+        viewModel?.updateList()
+        super.onResume()
     }
 
     override fun onPokemonClick(id: String) {
@@ -67,6 +81,7 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
         btnRefresh.setOnClickListener {
             viewModel?.updateList()
         }
+        swipeRefresh = view.findViewById(R.id.swipe_feed_refresh)
         tvError = view.findViewById(R.id.tv_feed_error)
         pgLoading = view.findViewById(R.id.pb_feed_loading)
         adapterFeed = FeedListAdapter(this)
@@ -76,6 +91,7 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     }
 
     private fun setObservers() {
+        viewModel?.init()
         viewModel?.feedLiveData?.observe(viewLifecycleOwner) { state ->
             val isError = state is FeedState.Error
             val isSuccess = state is FeedState.Success
@@ -95,6 +111,22 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
         val intent = Intent(activity, DetailsActivity::class.java)
         intent.putExtra(ID, id)
         startActivity(intent)
+    }
+
+    private fun rvAddOnScrollListener() {
+        rvFeed.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            var isLoaded = false
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(RecyclerView.FOCUS_DOWN) && recyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE
+                    && !isLoaded
+                ) {
+                    isLoaded = true
+                    viewModel?.addItemsInRecycler()
+                }
+                isLoaded = false
+            }
+        })
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.pokemonapp.features.details.domain
 
+import com.example.pokemonapp.api.model.details_model.Attack
 import com.example.pokemonapp.api.model.details_model.DetailsApiResponse
 import com.example.pokemonapp.features.favorite.data.FavoriteData
 import com.example.pokemonapp.features.favorite.domain.FavoriteModel
@@ -36,9 +37,17 @@ class DetailsInteractor @Inject constructor(private val detailsRepository: Detai
             health = detailsApiResponse.data.hp ?: "",
             rarity = detailsApiResponse.data.rarity ?: "",
             attack1 = detailsApiResponse.data.attacks?.get(0)?.name ?: "",
-            attack2 = detailsApiResponse.data.attacks?.get(1)?.name ?: "",
             subtype = detailsApiResponse.data.subtypes?.get(0) ?: "",
+            attack2 = checkAttackList(detailsApiResponse)
         )
+    }
+
+    private fun checkAttackList(detailsApiResponse: DetailsApiResponse): String?{
+        if (detailsApiResponse.data.attacks?.size == 1){
+            return "Отсутсвует"
+        }else{
+            return detailsApiResponse.data.attacks?.get(1)?.name
+        }
     }
 
     suspend fun addToFavorite(favoriteData: FavoriteData) {

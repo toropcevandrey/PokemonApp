@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 class FeedInteractor @Inject constructor(private val feedRepository: FeedRepository) {
 
-    suspend fun getFeedModelCards(): List<FeedModel> {
-        val feedApiResponse: FeedApiResponse = feedRepository.getFeedApiResponse()
+    suspend fun getFeedModelCards(page: Int): List<FeedModel> {
+        val feedApiResponse: FeedApiResponse = feedRepository.getFeedApiResponse(page)
         return generateFeedModelList(feedApiResponse)
     }
 

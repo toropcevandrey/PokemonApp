@@ -4,7 +4,7 @@ import com.example.pokemonapp.api.model.feed_model.FeedApiResponse
 import com.example.pokemonapp.features.favorite.data.FavoriteData
 
 interface FeedRepository {
-    suspend fun getFeedApiResponse():FeedApiResponse
+    suspend fun getFeedApiResponse(page: Int):FeedApiResponse
 
     suspend fun getFavoriteCards(): List<FavoriteData>
 

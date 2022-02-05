@@ -53,7 +53,7 @@ class DetailsViewModel @Inject constructor(
             health = detailsModel.health,
             rarity = detailsModel.rarity,
             attack1 = detailsModel.attack1,
-            attack2 = detailsModel.attack2,
+            attack2 = detailsModel.attack2 ?: "Отсуствует",
             favorite = isFavorite
         )
     }
@@ -81,7 +81,7 @@ class DetailsViewModel @Inject constructor(
                         health = detailsModel.health,
                         rarity = detailsModel.rarity,
                         attack1 = detailsModel.attack1,
-                        attack2 = detailsModel.attack2,
+                        attack2 = detailsModel.attack2 ?: "Отсутствует",
                         favorite = isFavorite
                     )
                 )
