@@ -26,12 +26,12 @@ class FeedInteractor @Inject constructor(private val feedRepository: FeedReposit
         return list
     }
 
-    suspend fun searchCard(query: String, page: Int):List<SearchModel>{
-        val feedApiResponse:FeedApiResponse = feedRepository.searchCard(query, page)
+    suspend fun searchCard(query: String, page: Int): List<SearchModel> {
+        val feedApiResponse: FeedApiResponse = feedRepository.searchCard(query, page)
         return generateSearhFeedModelList(feedApiResponse)
     }
 
-    private fun generateSearhFeedModelList(feedApiResponse: FeedApiResponse): List<SearchModel>{
+    private fun generateSearhFeedModelList(feedApiResponse: FeedApiResponse): List<SearchModel> {
         val list = mutableListOf<SearchModel>()
         feedApiResponse.data.forEach { element ->
             list.add(
@@ -67,7 +67,6 @@ class FeedInteractor @Inject constructor(private val feedRepository: FeedReposit
     suspend fun removeFromFavorite(id: String) {
         feedRepository.removeFromFavorite(id)
     }
-
 
 
 }

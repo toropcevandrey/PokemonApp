@@ -9,4 +9,4 @@ data class Data(
     val rarity: String?,
     val subtypes: List<String>?,
     val types: List<String>?
-    )
+)

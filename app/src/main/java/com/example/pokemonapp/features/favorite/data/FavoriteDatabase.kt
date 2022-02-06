@@ -4,6 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(entities = [FavoriteData::class], version = 1, exportSchema = false)
-abstract class FavoriteDatabase: RoomDatabase() {
+abstract class FavoriteDatabase : RoomDatabase() {
     abstract fun favoriteDataDao(): FavoriteDataDao
 }

@@ -46,17 +46,16 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_feed, container, false)
         App.getComponent().inject(this)
+        viewModel = ViewModelProvider(this, factory).get(FeedViewModel::class.java)
         initViews(view)
-        setupFeedViewModel()
         setObservers()
         rvAddOnScrollListener()
-        searchCard()
         return view
     }
 
     override fun onResume() {
-        viewModel?.updateList()
         super.onResume()
+        viewModel?.updateList()
     }
 
     override fun onPokemonClick(id: String) {
@@ -64,19 +63,15 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     }
 
     override fun onFavoriteClick(id: String) {
-        viewModel?.onFavorite(id)
+        viewModel?.onFavoriteClicked(id)
     }
 
-    private fun setupFeedViewModel() {
-        viewModel = ViewModelProvider(this, factory).get(FeedViewModel::class.java)
-        viewModel?.updateList()
-    }
-
-    private fun initViews(view: View): View {
+    private fun initViews(view: View) {
         rvFeed = view.findViewById(R.id.rv_feed)
         btnRefresh = view.findViewById(R.id.btn_feed_refresh)
         btnRefresh.setOnClickListener {
-            viewModel?.updateList()
+            etSearch.editableText.clear()
+            viewModel?.loadFeed()
         }
         etSearch = view.findViewById(R.id.et_search)
         tvError = view.findViewById(R.id.tv_feed_error)
@@ -84,11 +79,17 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
         adapterFeed = FeedListAdapter(this)
         rvFeed.adapter = adapterFeed
         rvFeed.layoutManager = GridLayoutManager(view.context, SPAN_COUNT)
-        return view
+
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel?.onSearchEntered(p0.toString())
+            }
+        })
     }
 
     private fun setObservers() {
-        viewModel?.init()
         viewModel?.feedLiveData?.observe(viewLifecycleOwner) { state ->
             val isError = state is FeedState.Error
             val isSuccess = state is FeedState.Success
@@ -125,20 +126,4 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
             }
         })
     }
-
-    private fun searchCard() {
-        etSearch.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel?.onSearchEntered(p0.toString())
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
-    }
-
 }

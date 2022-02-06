@@ -28,7 +28,7 @@ class FeedRepositoryImpl @Inject constructor(
         favoriteDataDao.removeFromFavorite(id)
     }
 
-    override suspend fun searchCard(query: String, page: Int):FeedApiResponse {
-        return apiService.searchCards(query,page)
+    override suspend fun searchCard(query: String, page: Int): FeedApiResponse {
+        return apiService.searchCards(query, page)
     }
 }

@@ -22,9 +22,11 @@ class DetailsViewModel @Inject constructor(
     fun init(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                favoriteList.clear()
+                detailsLiveData.postValue(DetailsState.Loading)
                 detailsModel = detailsInteractor.getDetailsInfoFromApi(id)
                 favoriteList.addAll(detailsInteractor.getFavoriteModelCards())
-                detailsLiveData.postValue(DetailsState.Loading)
+
                 detailsLiveData.postValue(
                     DetailsState.Success(
                         generateDetailsViewData(
@@ -59,7 +61,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun onFavorite(id: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val isFavorite: Boolean
                 val favoriteItem = favoriteList.find { element ->
@@ -72,21 +74,27 @@ class DetailsViewModel @Inject constructor(
                     removeFromFavorite(id)
                     isFavorite = false
                 }
-                detailsLiveData.value = DetailsState.Success(
-                    DetailsViewData(
-                        name = detailsModel.name,
-                        image = detailsModel.image,
-                        type = detailsModel.type,
-                        subtype = detailsModel.subtype,
-                        health = detailsModel.health,
-                        rarity = detailsModel.rarity,
-                        attack1 = detailsModel.attack1,
-                        attack2 = detailsModel.attack2 ?: "Отсутствует",
-                        favorite = isFavorite
+                detailsLiveData.postValue(
+                    DetailsState.Success(
+                        DetailsViewData(
+                            name = detailsModel.name,
+                            image = detailsModel.image,
+                            type = detailsModel.type,
+                            subtype = detailsModel.subtype,
+                            health = detailsModel.health,
+                            rarity = detailsModel.rarity,
+                            attack1 = detailsModel.attack1,
+                            attack2 = detailsModel.attack2 ?: "Отсутствует",
+                            favorite = isFavorite
+                        )
                     )
                 )
+
+                favoriteList.clear()
+                favoriteList.addAll(detailsInteractor.getFavoriteModelCards())
+
             } catch (e: Exception) {
-                detailsLiveData.value = DetailsState.Error
+                detailsLiveData.postValue(DetailsState.Error)
             }
         }
     }

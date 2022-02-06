@@ -8,10 +8,7 @@ import com.example.pokemonapp.features.favorite.domain.FavoriteModel
 import com.example.pokemonapp.features.feed.domain.FeedInteractor
 import com.example.pokemonapp.features.feed.domain.FeedModel
 import com.example.pokemonapp.features.feed.domain.SearchModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class FeedViewModel @Inject constructor(
@@ -24,15 +21,26 @@ class FeedViewModel @Inject constructor(
     private var searchList: MutableList<SearchModel> = mutableListOf()
     private var pageFeed: Int = 1
     private var pageSearch: Int = 1
-    private var isSearch: Boolean = true
+    private var isSearch: Boolean = false
     private var query: String? = ""
     private var searchJob: Job? = null
 
-    fun init() {
+    init {
+        loadFeed()
+    }
+
+    fun loadFeed() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                pageFeed = 1
+                pageSearch = 1
+                feedList.clear()
+                favoriteList.clear()
+                isSearch = false
+
                 feedList.addAll(feedInteractor.getFeedModelCards(pageFeed))
                 favoriteList.addAll(feedInteractor.getFavoriteModelCards())
+
                 feedLiveData.postValue(FeedState.Loading)
                 feedLiveData.postValue(
                     FeedState.Success(
@@ -48,7 +56,27 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun onFavorite(id: String) {
+    fun updateList() {
+        if (feedList.isEmpty()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                favoriteList.clear()
+                feedLiveData.postValue(FeedState.Loading)
+                favoriteList.addAll(feedInteractor.getFavoriteModelCards())
+                if (isSearch) {
+                    val list = generateSearchFeedViewData(searchList, favoriteList)
+                    feedLiveData.postValue(FeedState.Success(list))
+                } else {
+                    val list = generateFeedViewData(feedList, favoriteList)
+                    feedLiveData.postValue(FeedState.Success(list))
+                }
+            } catch (e: Exception) {
+                feedLiveData.postValue(FeedState.Error)
+            }
+        }
+    }
+
+    fun onFavoriteClicked(id: String) {
         viewModelScope.launch {
             val favoriteItem = favoriteList.find { element ->
                 id == element.id
@@ -102,25 +130,6 @@ class FeedViewModel @Inject constructor(
         return list
     }
 
-    fun updateList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                favoriteList.clear()
-                feedLiveData.postValue(FeedState.Loading)
-                favoriteList.addAll(feedInteractor.getFavoriteModelCards())
-                if (isSearch) {
-                    val list = generateSearchFeedViewData(searchList, favoriteList)
-                    feedLiveData.postValue(FeedState.Success(list))
-                } else {
-                    val list = generateFeedViewData(feedList, favoriteList)
-                    feedLiveData.postValue(FeedState.Success(list))
-                }
-            } catch (e: Exception) {
-                feedLiveData.postValue(FeedState.Error)
-            }
-        }
-    }
-
     private suspend fun addToFavorite(id: String) {
         if (isSearch) {
             val data: SearchModel = searchList.find { element ->
@@ -152,7 +161,6 @@ class FeedViewModel @Inject constructor(
         feedInteractor.removeFromFavorite(id)
     }
 
-
     fun loadNextPage() {
         if (!isSearch) {
             pageFeed++
@@ -168,19 +176,19 @@ class FeedViewModel @Inject constructor(
                             )
                             )
                 } catch (e: Exception) {
-                    FeedState.Error
+                    feedLiveData.postValue(FeedState.Error)
                 }
             }
         } else {
             pageSearch++
-            try {
-                viewModelScope.launch {
+            viewModelScope.launch {
+                try {
                     searchList.addAll(feedInteractor.searchCard("name:$query*", pageSearch))
                     feedLiveData.value =
                         FeedState.Success(generateSearchFeedViewData(searchList, favoriteList))
+                } catch (e: Exception) {
+                    feedLiveData.postValue(FeedState.Error)
                 }
-            } catch (e: java.lang.Exception) {
-                FeedState.Error
             }
         }
     }
@@ -193,17 +201,19 @@ class FeedViewModel @Inject constructor(
         searchJob?.cancel()
         if (!query.isNullOrEmpty()) {
             isSearch = true
-            try {
-                searchJob = viewModelScope.launch {
+            searchJob = viewModelScope.launch {
+                try {
                     feedLiveData.value = FeedState.Loading
                     delay(250)
                     searchList.addAll(feedInteractor.searchCard("name:$query*", 1))
                     feedLiveData.value =
                         FeedState.Success(generateSearchFeedViewData(searchList, favoriteList))
+                } catch (e: Exception) {
+                    if (e is CancellationException) return@launch
+                    feedLiveData.postValue(FeedState.Error)
                 }
-            } catch (e: java.lang.Exception) {
-                FeedState.Error
             }
+
         } else {
             isSearch = false
             feedLiveData.value = (

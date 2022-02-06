@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +25,7 @@ class FavoriteFragment : Fragment(), FavoriteListAdapter.OnPokemonClickListener 
     private var viewModel: FavoriteViewModel? = null
     private lateinit var rvFavorite: RecyclerView
     private lateinit var adapterFavorite: FavoriteListAdapter
+    private lateinit var tvFavorite: TextView
 
     companion object {
         const val TAG = "FRAGMENT_FAVORITE"
@@ -35,8 +38,10 @@ class FavoriteFragment : Fragment(), FavoriteListAdapter.OnPokemonClickListener 
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_favorite, container, false)
         App.getComponent().inject(this)
+
+        viewModel = ViewModelProvider(this, factory).get(FavoriteViewModel::class.java)
+
         initViews(view)
-        setupFavoriteViewModel()
         setObservers()
         return view
     }
@@ -54,13 +59,9 @@ class FavoriteFragment : Fragment(), FavoriteListAdapter.OnPokemonClickListener 
         viewModel?.onFavoriteClick(id)
     }
 
-    private fun setupFavoriteViewModel() {
-        viewModel = ViewModelProvider(this, factory).get(FavoriteViewModel::class.java)
-        viewModel?.updateList()
-    }
-
     private fun initViews(view: View): View {
         rvFavorite = view.findViewById(R.id.rv_favorite)
+        tvFavorite = view.findViewById(R.id.tv_favorite)
         adapterFavorite = FavoriteListAdapter(this)
         rvFavorite.adapter = adapterFavorite
         rvFavorite.layoutManager = GridLayoutManager(view.context, SPAN_COUNT)
@@ -69,7 +70,9 @@ class FavoriteFragment : Fragment(), FavoriteListAdapter.OnPokemonClickListener 
 
     private fun setObservers() {
         viewModel?.favoriteLiveData?.observe(viewLifecycleOwner) { list ->
+            tvFavorite.isVisible = list.isEmpty()
             adapterFavorite.submitList(list)
+
         }
     }
 

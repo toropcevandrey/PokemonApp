@@ -10,8 +10,8 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("cards/?$TOKEN")
     suspend fun getCards(
-        @Query("page")page: Int,
-        @Query("pageSize")pageSize: Int = 10
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int = 10
     ): FeedApiResponse
 
     @GET("cards/{id}?$TOKEN")
@@ -22,7 +22,7 @@ interface ApiService {
     @GET("cards/?$TOKEN")
     suspend fun searchCards(
         @Query("q", encoded = true) query: String,
-        @Query("page")page: Int,
-        @Query("pageSize")pageSize: Int = 10
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int = 10
     ): FeedApiResponse
 }

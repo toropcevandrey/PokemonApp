@@ -18,6 +18,5 @@ class FeedListAdapter(private val onClickListener: OnPokemonClickListener) :
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(current.id, current.image, current.name, current.favorite)
-
     }
 }

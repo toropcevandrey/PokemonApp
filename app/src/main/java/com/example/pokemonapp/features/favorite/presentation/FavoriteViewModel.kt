@@ -34,8 +34,7 @@ class FavoriteViewModel @Inject constructor(private val favoriteInteractor: Favo
     fun onFavoriteClick(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             favoriteInteractor.removeFromFavorite(id)
+            updateList()
         }
-        updateList()
     }
-
 }

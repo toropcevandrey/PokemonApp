@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class FavoriteRepositoryImpl @Inject constructor(
     private val favoriteDataDao: FavoriteDataDao
-    ) : FavoriteRepository {
+) : FavoriteRepository {
 
     override suspend fun getFavoriteCards(): List<FavoriteData> {
         return favoriteDataDao.getAll()
@@ -14,6 +14,4 @@ class FavoriteRepositoryImpl @Inject constructor(
     override suspend fun removeFromFavorite(id: String) {
         favoriteDataDao.removeFromFavorite(id)
     }
-
-
 }

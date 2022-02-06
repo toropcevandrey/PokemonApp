@@ -42,10 +42,10 @@ class DetailsInteractor @Inject constructor(private val detailsRepository: Detai
         )
     }
 
-    private fun checkAttackList(detailsApiResponse: DetailsApiResponse): String?{
-        if (detailsApiResponse.data.attacks?.size == 1){
+    private fun checkAttackList(detailsApiResponse: DetailsApiResponse): String? {
+        if (detailsApiResponse.data.attacks?.size == 1) {
             return "Отсутсвует"
-        }else{
+        } else {
             return detailsApiResponse.data.attacks?.get(1)?.name
         }
     }
