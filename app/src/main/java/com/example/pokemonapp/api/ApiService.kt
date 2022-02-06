@@ -18,4 +18,11 @@ interface ApiService {
     suspend fun getDetails(
         @Path("id") id: String
     ): DetailsApiResponse
+
+    @GET("cards/?$TOKEN")
+    suspend fun searchCards(
+        @Query("q", encoded = true) query: String,
+        @Query("page")page: Int,
+        @Query("pageSize")pageSize: Int = 10
+    ): FeedApiResponse
 }

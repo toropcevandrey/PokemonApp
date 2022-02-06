@@ -26,6 +26,26 @@ class FeedInteractor @Inject constructor(private val feedRepository: FeedReposit
         return list
     }
 
+    suspend fun searchCard(query: String, page: Int):List<SearchModel>{
+        val feedApiResponse:FeedApiResponse = feedRepository.searchCard(query, page)
+        return generateSearhFeedModelList(feedApiResponse)
+    }
+
+    private fun generateSearhFeedModelList(feedApiResponse: FeedApiResponse): List<SearchModel>{
+        val list = mutableListOf<SearchModel>()
+        feedApiResponse.data.forEach { element ->
+            list.add(
+                SearchModel(
+                    element.id,
+                    element.name,
+                    element.images.large
+                )
+            )
+        }
+        return list
+    }
+
+
     suspend fun getFavoriteModelCards(): List<FavoriteModel> {
         val favoriteData: List<FavoriteData> = feedRepository.getFavoriteCards()
         return generateFavoriteModelList(favoriteData)
@@ -47,5 +67,7 @@ class FeedInteractor @Inject constructor(private val feedRepository: FeedReposit
     suspend fun removeFromFavorite(id: String) {
         feedRepository.removeFromFavorite(id)
     }
+
+
 
 }

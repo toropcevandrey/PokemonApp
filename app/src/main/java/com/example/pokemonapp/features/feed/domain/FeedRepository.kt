@@ -11,4 +11,6 @@ interface FeedRepository {
     suspend fun addToFavorite(favoriteData: FavoriteData)
 
     suspend fun removeFromFavorite(id: String)
+
+    suspend fun searchCard(query: String, page: Int):FeedApiResponse
 }

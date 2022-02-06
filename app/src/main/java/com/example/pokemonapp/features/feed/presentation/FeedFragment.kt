@@ -2,21 +2,20 @@ package com.example.pokemonapp.features.feed.presentation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.pokemonapp.App
 import com.example.pokemonapp.R
 import com.example.pokemonapp.features.details.presentation.DetailsActivity
@@ -34,7 +33,7 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
     private lateinit var tvError: TextView
     private lateinit var pgLoading: ProgressBar
     private lateinit var btnRefresh: Button
-    private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var etSearch: EditText
 
     companion object {
         const val TAG = "FRAGMENT_FEED"
@@ -51,9 +50,7 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
         setupFeedViewModel()
         setObservers()
         rvAddOnScrollListener()
-        swipeRefresh.setOnRefreshListener {
-            viewModel?.init()
-        }
+        searchCard()
         return view
     }
 
@@ -81,7 +78,7 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
         btnRefresh.setOnClickListener {
             viewModel?.updateList()
         }
-        swipeRefresh = view.findViewById(R.id.swipe_feed_refresh)
+        etSearch = view.findViewById(R.id.et_search)
         tvError = view.findViewById(R.id.tv_feed_error)
         pgLoading = view.findViewById(R.id.pb_feed_loading)
         adapterFeed = FeedListAdapter(this)
@@ -122,10 +119,25 @@ class FeedFragment : Fragment(), FeedListAdapter.OnPokemonClickListener {
                     && !isLoaded
                 ) {
                     isLoaded = true
-                    viewModel?.addItemsInRecycler()
+                    viewModel?.loadNextPage()
                 }
                 isLoaded = false
             }
+        })
+    }
+
+    private fun searchCard() {
+        etSearch.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel?.onSearchEntered(p0.toString())
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
         })
     }
 
